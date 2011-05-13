@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DndZgz</string>
+    <string name="app_url">http://dndzgz.com/</string>
     <string name="cargando_aplicacion">Cargando aplicación\nPor favor espere...</string>
+    <string name="id_poste">Bus Stop: </string>
+    <string name="dndzgz">Dónde en Zaragoza</string>
+    <string name="listado_autobuses">Listado de Autobuses</string>
+    
 </resources>
