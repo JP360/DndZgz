@@ -180,9 +180,6 @@ public class BusesMapActivity extends MapActivity {
 		double oldLongitude = (double)Math.round(lastLocation.getLongitude() * 10000000) / 10000000;
 		
 		if(!(newLatitude == oldLatitude) || !(newLongitude == oldLongitude)){
-			Log.i(TAG, "Muevo el mapa");
-			Log.i(TAG, "Latitud:" + newLatitude + " -> " + oldLatitude);
-			Log.i(TAG, "Longitud:" + newLongitude + " -> " + oldLongitude);
 			lastLocation.setLongitude(newLongitude);
 			lastLocation.setLatitude(newLatitude);
 			mapView.getController().animateTo(point);
