@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.positivedevelopers.android.dndzgz"
-      android:versionCode="1"
-      android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="7" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".SplashActivity"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-		<activity android:name=".MenuActivity" android:label="@string/app_name">
+	package="com.dndzgz.android" android:versionCode="1"
+	android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="7" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<application android:icon="@drawable/ic_logo_dndzgz"
+		android:label="@string/app_name" android:name=".DndZgzApplication">
+		<uses-library android:name="com.google.android.maps" />
+		<activity android:name=".MenuActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
 		</activity>
-    </application>
+		<activity android:name=".BusesActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".BusDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".BusesMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+	</application>
 </manifest>
