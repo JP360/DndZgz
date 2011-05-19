@@ -40,7 +40,7 @@ public class BusesMapActivity extends MapActivity {
 	private LocationListener locationListener;
 	private boolean isRequest;
 	private Location lastLocation;
-	
+
 	private static final String TAG = "DndZgzAndroid";
 
 	@Override
@@ -78,7 +78,7 @@ public class BusesMapActivity extends MapActivity {
 		locationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
 				showUserMarker(location);
-//				Log.i(TAG, "LocationChanged");
+				// Log.i(TAG, "LocationChanged");
 			}
 
 			public void onStatusChanged(String provider, int status,
@@ -147,7 +147,7 @@ public class BusesMapActivity extends MapActivity {
 			progressDialog.dismiss();
 		}
 	};
-	
+
 	protected void trackUserLocation() {
 		// Acquire a reference to the system Location Manager
 		Criteria criteria = new Criteria();
@@ -156,13 +156,16 @@ public class BusesMapActivity extends MapActivity {
 		Log.i(TAG, "Best Provider: " + bestProvider);
 		Location lastKnownLocation = locationManager
 				.getLastKnownLocation(bestProvider);
-		requestLocations();		
+		requestLocations();
 		mapView.getController().setZoom(16);
 		Log.i(TAG, "lastLocation");
 		lastLocation = lastKnownLocation;
 		Log.i(TAG, "showUserMarker");
 		showUserMarker(lastKnownLocation);
-		
+		GeoPoint point = toGeoPoint(lastKnownLocation.getLatitude(),
+				lastKnownLocation.getLongitude());
+		mapView.getController().animateTo(point);
+
 	}
 
 	protected void showUserMarker(Location location) {
@@ -174,32 +177,36 @@ public class BusesMapActivity extends MapActivity {
 		OverlayItem overlayitem = new OverlayItem(point, "", "");
 		userOverlay.addOverlay(overlayitem);
 		mapView.getOverlays().add(userOverlay);
-		double newLatitude = (double)Math.round(location.getLatitude() * 10000000) / 10000000;
-		double newLongitude = (double)Math.round(location.getLongitude() * 10000000) / 10000000;
-		double oldLatitude = (double)Math.round(lastLocation.getLatitude() * 10000000) / 10000000;
-		double oldLongitude = (double)Math.round(lastLocation.getLongitude() * 10000000) / 10000000;
-		
-		if(!(newLatitude == oldLatitude) || !(newLongitude == oldLongitude)){
-			lastLocation.setLongitude(newLongitude);
-			lastLocation.setLatitude(newLatitude);
-			mapView.getController().animateTo(point);
-		}
+		// double newLatitude = (double)Math.round(location.getLatitude() *
+		// 10000000) / 10000000;
+		// double newLongitude = (double)Math.round(location.getLongitude() *
+		// 10000000) / 10000000;
+		// double oldLatitude = (double)Math.round(lastLocation.getLatitude() *
+		// 10000000) / 10000000;
+		// double oldLongitude = (double)Math.round(lastLocation.getLongitude()
+		// * 10000000) / 10000000;
+		//		
+		// if(!(newLatitude == oldLatitude) || !(newLongitude == oldLongitude)){
+		// lastLocation.setLongitude(newLongitude);
+		// lastLocation.setLatitude(newLatitude);
+		// mapView.getController().animateTo(point);
+		// }
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
 		Log.i(TAG, "onStart()");
 		requestLocations();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		Log.i(TAG, "onResume()");
 		requestLocations();
 	}
-		
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -212,7 +219,7 @@ public class BusesMapActivity extends MapActivity {
 		super.onStop();
 		Log.i(TAG, "onStop()");
 		removeRequestLocation();
-	}	
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -220,11 +227,11 @@ public class BusesMapActivity extends MapActivity {
 		Log.i(TAG, "onDestroy()");
 		removeRequestLocation();
 	}
-	
+
 	private void requestLocations() {
-//		Log.i(TAG, "requestLocations()");
-//		Log.i(TAG, "isRequest: " + isRequest);
-		if (!isRequest) {			
+		// Log.i(TAG, "requestLocations()");
+		// Log.i(TAG, "isRequest: " + isRequest);
+		if (!isRequest) {
 			locationManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 			locationManager.requestLocationUpdates(
@@ -232,7 +239,7 @@ public class BusesMapActivity extends MapActivity {
 			isRequest = true;
 		}
 	}
-	
+
 	private void removeRequestLocation() {
 		if (isRequest) {
 			locationManager.removeUpdates(locationListener);
