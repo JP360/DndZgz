@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layout_root" android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:padding="10dp">
+	<LinearLayout android:id="@+id/view_info"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:padding="10dp">
+		<ImageView android:id="@+id/info_icon" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_marginRight="10dp"
+			android:src="@drawable/ic_icon_info" android:layout_gravity="left" />
+		<TextView android:id="@+id/info_text" android:layout_width="fill_parent"
+			android:textColor="#FFF" android:text="@string/ver_info"
+			android:layout_height="fill_parent" android:layout_gravity="center"
+			android:gravity="center" android:textSize="20px" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/view_delete"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:padding="10dp">
+		<ImageView android:id="@+id/delete_icon" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_marginRight="10dp"
+			android:src="@drawable/ic_icon_delete" android:layout_gravity="left" />
+		<TextView android:id="@+id/delete_text" android:layout_width="fill_parent"
+			android:textColor="#FFF" android:text="@string/borrar_fav"
+			android:layout_height="fill_parent" android:layout_gravity="center"
+			android:gravity="center" android:textSize="20px" />
+	</LinearLayout>
+</LinearLayout>

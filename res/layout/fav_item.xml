@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="horizontal" android:padding="4px"  android:background="#33CCFF">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:padding="6dip"
+		android:orientation="horizontal" android:background="#FF3366">
+		<ImageView android:id="@+id/icono" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_marginRight="6dip"
+			android:src="@drawable/fav" android:layout_weight="1" />
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_weight="4" android:background="#FFCC33">
+			<TextView android:id="@+id/txtTitulo" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_weight="1"
+				android:gravity="center_vertical" android:textSize="20px"
+				android:text="Estacion bici" />
+			<TextView android:id="@+id/txtSubTitulo"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:gravity="center_vertical"
+				android:textSize="20px" android:text="Parada 25" />
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

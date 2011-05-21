@@ -5,7 +5,7 @@
 	android:layout_height="fill_parent">
 	<com.markupartist.android.widget.ActionBar
 		android:id="@+id/actionbar" style="@style/ActionBar" />
-	<LinearLayout android:id="@+id/poste" android:orientation="horizontal"
+	<LinearLayout android:id="@+id/contenedor_busqueda" android:orientation="horizontal"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_gravity="center_horizontal" android:gravity="left"
 		android:layout_marginBottom="20px">
@@ -15,11 +15,11 @@
 			android:layout_width="wrap_content" android:gravity="left"
 			android:textSize="25px" android:layout_marginRight="10px"/>
 
-		<EditText android:layout_height="wrap_content" android:id="@+id/txtParada"
+		<EditText android:layout_height="wrap_content" android:id="@+id/txtSearch"
 			android:layout_width="fill_parent" />
 
 	</LinearLayout>
-	<ListView android:id="@+id/ListAutobuses"
+	<ListView android:id="@+id/ListView"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
 </LinearLayout>
