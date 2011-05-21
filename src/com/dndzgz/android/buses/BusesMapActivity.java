@@ -1,10 +1,9 @@
-package com.dndzgz.android;
+package com.dndzgz.android.buses;
 
-import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +17,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.dndzgz.android.DndZgzApplication;
+import com.dndzgz.android.R;
+import com.dndzgz.android.data.JsonOverlayItem;
+import com.dndzgz.android.data.ObjectsItemizedOverlay;
+import com.dndzgz.android.data.userItemizedOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
@@ -47,17 +51,25 @@ public class BusesMapActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "onCreate()");
-		setContentView(R.layout.busesmap);
+		setContentView(R.layout.map);
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapOverlays = mapView.getOverlays();
-		pushPinMarker = this.getResources().getDrawable(R.drawable.marker_big);
+		pushPinMarker = this.getResources().getDrawable(R.drawable.ic_icon_map_marker);
 		itemizedoverlay = new ObjectsItemizedOverlay(pushPinMarker, mapView);
+		itemizedoverlay.setDestino(BusDataActivity.class);
 		userLocationMarker = this.getResources().getDrawable(
 				R.drawable.ic_icon_user_location);
 		userOverlay = new userItemizedOverlay(userLocationMarker);
-		dndzgzApp = ((DndZgzApplication) this.getApplication());
-		busesArrayList = dndzgzApp.getBusesList();
+		dndzgzApp =  ((DndZgzApplication)this.getApplication());
+		JSONArray listJSON = dndzgzApp.getBikesList();
+		for(int i=0; i<listJSON.length(); i++){
+			try {
+				busesArrayList.add((JSONObject) listJSON.get(i));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 		Log.i(TAG, "busesArrayList: " + busesArrayList.size());
 
 		runnableAutobus = new Runnable() {
@@ -116,6 +128,7 @@ public class BusesMapActivity extends MapActivity {
 					mapOverlays.add(itemizedoverlay);
 					itemizedoverlay = new ObjectsItemizedOverlay(pushPinMarker,
 							mapView);
+					itemizedoverlay.setDestino(BusDataActivity.class);
 					// Log.e(TAG, "Nueva Capa");
 				}
 				// Log.i(TAG, (i+1)+"");

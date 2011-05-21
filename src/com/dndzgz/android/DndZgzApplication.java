@@ -1,42 +1,40 @@
 package com.dndzgz.android;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Application;
 
 public class DndZgzApplication extends Application {
-	private ArrayList<JSONObject> busesList = new ArrayList<JSONObject>();
-	private JSONObject lastBus = new JSONObject();
+	private JSONArray busesList = new JSONArray();	
+	private JSONArray bikesList = new JSONArray();
+	private JSONArray favsList = new JSONArray();
+	private JSONObject lastObject = new JSONObject();
 	
-	private ArrayList<JSONObject> bikesList = new ArrayList<JSONObject>();
-	private JSONObject lastBike = new JSONObject();
 	
-	public ArrayList<JSONObject> getBusesList() {
+	public JSONArray getBusesList() {
 		return busesList;
 	}
-	public void setBusesList(ArrayList<JSONObject> busesList) {
+	public void setBusesList(JSONArray busesList) {
 		this.busesList = busesList;
 	}
-	public JSONObject getLastBus() {
-		return lastBus;
-	}
-	public void setLastBus(JSONObject lastBus) {
-		this.lastBus = lastBus;
-	}
-	public ArrayList<JSONObject> getBikesList() {
+	
+	public JSONArray getBikesList() {
 		return bikesList;
 	}
-	public void setBikesList(ArrayList<JSONObject> bikesList) {
+	public void setBikesList(JSONArray bikesList) {
 		this.bikesList = bikesList;
 	}
-	public JSONObject getLastBike() {
-		return lastBike;
+	public JSONObject getLastObject() {
+		return lastObject;
 	}
-	public void setLastBike(JSONObject lastBike) {
-		this.lastBike = lastBike;
+	public void setLastObject(JSONObject lastObject) {
+		this.lastObject = lastObject;
+	}
+	public JSONArray getFavsList() {
+		return favsList;
+	}
+	public void setFavsList(JSONArray favsList) {
+		this.favsList = favsList;
 	}	
-	
 }

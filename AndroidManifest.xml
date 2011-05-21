@@ -15,11 +15,21 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".BusesActivity" android:label="@string/app_name"
+		<activity android:name=".buses.BusesActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".BusDataActivity" android:label="@string/app_name"
+		<activity android:name=".buses.BusDataActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".BusesMapActivity" android:label="@string/app_name"
+		<activity android:name=".buses.BusesMapActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".bikes.BikesActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".bikes.BikesDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".bikes.BikesMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".favorites.FavoritesActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />		
 	</application>
 </manifest>

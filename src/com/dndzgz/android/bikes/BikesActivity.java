@@ -1,4 +1,4 @@
-package com.dndzgz.android;
+package com.dndzgz.android.bikes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,19 +33,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.dndzgz.android.DndZgzApplication;
+import com.dndzgz.android.MenuActivity;
+import com.dndzgz.android.R;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
-public class BusesActivity extends Activity {
+public class BikesActivity extends Activity {
 
-	private ListView listViewBuses;
+	private ListView listViewBikes;
 	private EditText txtSearch;
 
 	private ProgressDialog progressDialog = null;
-	private ArrayList<JSONObject> busesArrayList = null;
-	private AutobusesAdapter busesListAdapter;
-	private Runnable runnableBuses;
+	private ArrayList<JSONObject> bikesArrayList = null;
+	private BikesAdapter bikesListAdapter;
+	private Runnable runnableBikes;
 	private DndZgzApplication dndzgzApp;
 
 	private static final String TAG = "DndZgzAndroid";
@@ -54,70 +57,77 @@ public class BusesActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// ACTION BAR
-		setContentView(R.layout.bus);
+		setContentView(R.layout.listview);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		Intent homeIntent = new Intent(this, MenuActivity.class);
 		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		actionBar.setHomeAction(new IntentAction(this, homeIntent,
 				R.drawable.ic_title_home_default));
-		actionBar.setTitle(R.string.listado_autobuses);
+		actionBar.setTitle(R.string.listado_bicis);
 
-		Intent busesMapIntent = new Intent(BusesActivity.this,
-				BusesMapActivity.class);
-		busesMapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		final Action busesMapAction = new IntentAction(this, busesMapIntent,
+		Intent bikesMapIntent = new Intent(BikesActivity.this,
+				BikesMapActivity.class);
+		bikesMapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		final Action bikesMapAction = new IntentAction(this, bikesMapIntent,
 				R.drawable.ic_action_bar_locate);
-		actionBar.addAction(busesMapAction);
+		actionBar.addAction(bikesMapAction);
 		// ////////////////
-		txtSearch = (EditText) findViewById(R.id.txtParada);
+		txtSearch = (EditText) findViewById(R.id.txtSearch);
 		txtSearch.addTextChangedListener(filterTextWatcher);
-		listViewBuses = (ListView) findViewById(R.id.ListAutobuses);
-		busesArrayList = new ArrayList<JSONObject>();
-		this.busesListAdapter = new AutobusesAdapter(this,
-				R.layout.autobus_item, busesArrayList);
-		listViewBuses.setAdapter(this.busesListAdapter);
-		listViewBuses.setOnItemClickListener(new OnItemClickListener() {
+		listViewBikes = (ListView) findViewById(R.id.ListView);
+		bikesArrayList = new ArrayList<JSONObject>();
+		this.bikesListAdapter = new BikesAdapter(this,
+				R.layout.bikes_item, bikesArrayList);
+		listViewBikes.setAdapter(this.bikesListAdapter);
+		listViewBikes.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-				JSONObject jo = busesListAdapter.getItem(pos);
-				Intent mainIntent = new Intent(BusesActivity.this,
-						BusDataActivity.class);
-				mainIntent.putExtra("autobus", jo.toString());
+				JSONObject jo = bikesListAdapter.getItem(pos);
+				Intent mainIntent = new Intent(BikesActivity.this,
+						BikesDataActivity.class);
+				mainIntent.putExtra("object", jo.toString());
 				mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				BusesActivity.this.startActivity(mainIntent);
+				BikesActivity.this.startActivity(mainIntent);
 			}
 		});
 		Log.i(TAG, "General Application");
-		// Obtengo el listado de Autobuses de la Aplicacion
+		// Obtengo el listado de Bicis de la Aplicacion
 		dndzgzApp =  ((DndZgzApplication)this.getApplication());
-		busesArrayList = dndzgzApp.getBusesList();
-		Log.i(TAG, "busesArrayList: " + busesArrayList.size());
+		JSONArray listJSON = dndzgzApp.getBikesList();
+		for(int i=0; i<listJSON.length(); i++){
+			try {
+				bikesArrayList.add((JSONObject) listJSON.get(i));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		Log.i(TAG, "bikesArrayList: " + bikesArrayList.size());
 		//Si no tenemos el listado
-		if (!(busesArrayList.size() > 0)) {
-			runnableBuses = new Runnable() {
+		if (!(bikesArrayList.size() > 0)) {
+			runnableBikes = new Runnable() {
 				@Override
 				public void run() {
-					getAutobuses();
+					getBikes();
 				}
 			};
-			Thread thread = new Thread(null, runnableBuses,
-					"ObtenerListadoAutobuses");
+			Thread thread = new Thread(null, runnableBikes,
+					"ObtenerListadoBicis");
 			thread.start();
-			progressDialog = ProgressDialog.show(BusesActivity.this,
-					"Por favor, espere...", "Obteniendo Datos...", true);
+			progressDialog = ProgressDialog.show(BikesActivity.this,
+					getText(R.string.espere), getText(R.string.obteniendo_datos), true);
 		} else {
-			progressDialog = ProgressDialog.show(BusesActivity.this,
-					"Por favor, espere...", "Actualizando Datos...", true);
-			updateBusesAdapter();
+			progressDialog = ProgressDialog.show(BikesActivity.this,
+					getText(R.string.espere), getText(R.string.actualizando_datos), true);
+			updateBikesAdapter();
 		}
 
 	}
 
-	private class AutobusesAdapter extends ArrayAdapter<JSONObject> {
+	private class BikesAdapter extends ArrayAdapter<JSONObject> {
 		private ArrayList<JSONObject> items;
 
-		public AutobusesAdapter(Context context, int textViewResourceId,
+		public BikesAdapter(Context context, int textViewResourceId,
 				ArrayList<JSONObject> items) {
 			super(context, textViewResourceId, items);
 			this.items = items;
@@ -128,7 +138,7 @@ public class BusesActivity extends Activity {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.autobus_item, null);
+				v = vi.inflate(R.layout.bikes_item, null);
 			}
 			JSONObject jo = items.get(position);
 			if (jo != null) {
@@ -150,27 +160,30 @@ public class BusesActivity extends Activity {
 		}
 	}
 
-	private void getAutobuses() {
+	private void getBikes() {
 		try {
-			Log.i(TAG, "getAutobuses()");
-			String jsonAutobuses = retriveList();
-			JSONArray busesJson = new JSONArray(jsonAutobuses);
-			int n = busesJson.length();
-			busesArrayList = new ArrayList<JSONObject>();
+			Log.i(TAG, "getBikes()");
+			String jsonBikes = retriveList();
+			JSONArray bikesJson = new JSONArray(jsonBikes);
+			int n = bikesJson.length();
+			bikesArrayList = new ArrayList<JSONObject>();
+			JSONArray bikesArrayJson = new JSONArray();
 			Log.i(TAG, "Total Objetos: " + n);
 			for (int i = 0; i < n; i++) {
 				try {
-					JSONObject bus = busesJson.getJSONObject(i);
-					busesArrayList.add(bus);
+					JSONObject bike = bikesJson.getJSONObject(i);
+					bikesArrayJson.put(bike);
+					bikesArrayList.add(bike);
 				} catch (JSONException e) {
 					Log.e(TAG, e.getMessage());
 				}
 			}
-			dndzgzApp.setBusesList(busesArrayList);
-			Log.i(TAG, "Total Buses: " + busesArrayList.size());
+			
+			dndzgzApp.setBikesList(bikesArrayJson);
+			Log.i(TAG, "Total Bicis: " + bikesArrayList.size());
 		} catch (Exception e) {
-			Log.i(TAG, "getAutobuses() " + e.getMessage());
-			Log.i(TAG, "getAutobuses() " + e.toString());
+			Log.i(TAG, "getBikes() " + e.getMessage());
+			Log.i(TAG, "getBikes() " + e.toString());
 		}
 
 		runOnUiThread(returnRes);
@@ -179,7 +192,7 @@ public class BusesActivity extends Activity {
 	private Runnable returnRes = new Runnable() {
 		@Override
 		public void run() {
-			updateBusesAdapter();
+			updateBikesAdapter();
 		}		
 	};
 
@@ -191,7 +204,7 @@ public class BusesActivity extends Activity {
 		Writer writer = null;
 		String result = null;
 		try {
-			url = new URL("http://www.dndzgz.com/fetch?service=bus");
+			url = new URL("http://www.dndzgz.com/fetch?service=bizi");
 			urlConnection = (HttpURLConnection) url.openConnection();
 			InputStream in = urlConnection.getInputStream();
 			if (in != null) {
@@ -214,7 +227,7 @@ public class BusesActivity extends Activity {
 		} finally {
 			urlConnection.disconnect();
 		}
-		Log.i(TAG, "listado obtenido (Gracias DndZgz!!)");
+		Log.i(TAG, "listado obtenido (¡¡Gracias DndZgz!!)");
 		return result;
 	}
 
@@ -235,39 +248,41 @@ public class BusesActivity extends Activity {
 	};
 
 	protected void filtrarAdapter(CharSequence s) {
-		busesListAdapter.clear();
-		for (int i = 0; i < busesArrayList.size(); i++) {
-			JSONObject jo = busesArrayList.get(i);
+		bikesListAdapter.clear();
+		String search = s.toString();
+		search = search.toLowerCase();
+		for (int i = 0; i < bikesArrayList.size(); i++) {
+			JSONObject jo = bikesArrayList.get(i);
 			String titulo = "";
 			String subtitulo = "";
 			try {
-				titulo = jo.getString("title");
-				subtitulo = jo.getString("subtitle");
+				titulo = jo.getString("title").toLowerCase();
+				subtitulo = jo.getString("subtitle").toLowerCase();				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			if (titulo.contains(s) || subtitulo.contains(s)) {
-				busesListAdapter.add(jo);
+			if (titulo.contains(search) || subtitulo.contains(search)) {
+				bikesListAdapter.add(jo);
 			}
 		}
-		busesListAdapter.notifyDataSetChanged();
+		bikesListAdapter.notifyDataSetChanged();
 	}
 
-	private void updateBusesAdapter() {
-		if (busesArrayList != null && busesArrayList.size() > 0) {
-			busesListAdapter.notifyDataSetChanged();
-			for (int i = 0; i < busesArrayList.size(); i++)
-				busesListAdapter.add(busesArrayList.get(i));
+	private void updateBikesAdapter() {
+		if (bikesArrayList != null && bikesArrayList.size() > 0) {
+			bikesListAdapter.notifyDataSetChanged();
+			for (int i = 0; i < bikesArrayList.size(); i++)
+				bikesListAdapter.add(bikesArrayList.get(i));
 		}
 		progressDialog.dismiss();
-		busesListAdapter.notifyDataSetChanged();
-		listViewBuses.requestFocus();
-		filterBusesList();
+		bikesListAdapter.notifyDataSetChanged();
+		listViewBikes.requestFocus();
+		filterBikesList();
 	}
 	
-	private void filterBusesList() {
+	private void filterBikesList() {
 		if (getIntent().hasExtra("filtro")) {
 			String filtro = getIntent().getStringExtra("filtro");
 			filtro = "Poste " + filtro;

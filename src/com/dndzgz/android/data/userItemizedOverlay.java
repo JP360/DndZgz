@@ -1,4 +1,4 @@
-package com.dndzgz.android;
+package com.dndzgz.android.data;
 
 import java.util.ArrayList;
 

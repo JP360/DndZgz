@@ -1,14 +1,23 @@
 package com.dndzgz.android;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.dndzgz.android.bikes.BikesActivity;
+import com.dndzgz.android.buses.BusesActivity;
+import com.dndzgz.android.favorites.FavoritesActivity;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 
@@ -26,15 +35,21 @@ public class MenuActivity extends Activity implements OnClickListener {
 	private ImageView btnFavoritos;
 	private ImageView btnBuscar;
 	private EditText busStop;
+	private JSONArray listFavs;
+	private DndZgzApplication dndzgzApp;
 	private static final String TAG = "DndZgzAndroid";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		dndzgzApp =  ((DndZgzApplication)this.getApplication());
 		setContentView(R.layout.menu);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		actionBar.setHomeAction(new NullAction());
 		actionBar.setTitle(R.string.dndzgz);
+		
+		LinearLayout layoutSearch = (LinearLayout) findViewById(R.id.poste);
+		layoutSearch.setBackgroundColor(Color.parseColor("#333333"));
 		
 		btnAutobuses = (ImageView) findViewById(R.id.bus);
 		btnAutobuses.setOnClickListener(this);
@@ -70,6 +85,17 @@ public class MenuActivity extends Activity implements OnClickListener {
 		btnBuscar.setOnClickListener(this);
 		
 		busStop = (EditText) findViewById(R.id.txtParada);
+		
+		SharedPreferences favorites = getSharedPreferences("favorites", MODE_PRIVATE);
+		String sListFavs = favorites.getString("listaFav", "");
+		if(sListFavs != ""){
+			try {
+				listFavs = new JSONArray(sListFavs);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}			
+			dndzgzApp.setFavsList(listFavs);
+		}
 	}
 
 	@Override
@@ -82,11 +108,10 @@ public class MenuActivity extends Activity implements OnClickListener {
 			 MenuActivity.this.startActivity(autobusesIntent);
 		} else if (v == btnBizis) {
 			Log.w(TAG, "Boton Bicis"); // warning
-			// Intent biziIntent = new Intent(MenuActivity.this,
-			// BiziActivity.class);
-			// biziIntent.putExtra("listadoBizis", listadoBizis);
-			// biziIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			// MenuActivity.this.startActivity(biziIntent);
+			 Intent biziIntent = new Intent(MenuActivity.this,
+			 BikesActivity.class);
+			 biziIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			 MenuActivity.this.startActivity(biziIntent);
 		} else if (v == btnTranvia) {
 			Log.w(TAG, "Boton Tranvia"); // warning
 			// Intent wifisIntent = new Intent(MenuActivity.this,
@@ -114,7 +139,11 @@ public class MenuActivity extends Activity implements OnClickListener {
 			
 		}else if (v == btnFavoritos) {
 			Log.w(TAG, "Boton Favoritos"); // warning
-			
+			Intent FavIntent = new Intent(MenuActivity.this,
+			FavoritesActivity.class);
+			FavIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			FavIntent.putExtra("action", "view");
+			MenuActivity.this.startActivity(FavIntent);			
 		}else if (v == btnBuscar) {
 			Log.w(TAG, "Boton Buscar"); // warning
 			String textoFiltro = busStop.getText().toString();
