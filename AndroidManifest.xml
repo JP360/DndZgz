@@ -5,6 +5,7 @@
 	<uses-sdk android:minSdkVersion="7" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	
 	<application android:icon="@drawable/ic_logo_dndzgz"
 		android:label="@string/app_name" android:name=".DndZgzApplication">
 		<uses-library android:name="com.google.android.maps" />
@@ -15,6 +16,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
 		<activity android:name=".buses.BusesActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" />
 		<activity android:name=".buses.BusDataActivity" android:label="@string/app_name"
@@ -27,6 +29,55 @@
 		<activity android:name=".bikes.BikesDataActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" />
 		<activity android:name=".bikes.BikesMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".tram.TramActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".tram.TramDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".tram.TramMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".store.StoreActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".store.StoreDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".store.StoreMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".pharmacy.PharmacyActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".pharmacy.PharmacyDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".pharmacy.PharmacyMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".gas.GasActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".gas.GasDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".gas.GasMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".taxi.TaxiActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".taxi.TaxiDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".taxi.TaxiMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".parking.ParkingActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".parking.ParkingDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".parking.ParkingMapActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+			
+		<activity android:name=".wifi.WifiActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".wifi.WifiDataActivity" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name=".wifi.WifiMapActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" />
 			
 		<activity android:name=".favorites.FavoritesActivity" android:label="@string/app_name"

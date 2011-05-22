@@ -1,9 +1,40 @@
 package com.dndzgz.android.favorites;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+
 import com.dndzgz.android.DndZgzApplication;
 import com.dndzgz.android.MenuActivity;
-import com.dndzgz.android.bikes.BikesDataActivity;
 import com.dndzgz.android.buses.BusDataActivity;
+import com.dndzgz.android.gas.GasDataActivity;
+import com.dndzgz.android.parking.ParkingDataActivity;
+import com.dndzgz.android.pharmacy.PharmacyDataActivity;
+import com.dndzgz.android.store.StoreDataActivity;
+import com.dndzgz.android.taxi.TaxiDataActivity;
+import com.dndzgz.android.tram.TramDataActivity;
+import com.dndzgz.android.wifi.WifiDataActivity;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 import com.markupartist.android.widget.actionbar.R;
@@ -17,6 +48,7 @@ public class FavoritesActivity extends Activity {
 	private ArrayList<JSONObject> favArrayList;
 	private FavAdapter FavAdapter;
 	private static final String TAG = "DndZgzAndroid";
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +103,28 @@ public class FavoritesActivity extends Activity {
 								BusDataActivity.class);
 					} else if (type.equals("bike")) {
 						action = new Intent(FavoritesActivity.this,
-								BikesDataActivity.class);
+								StoreDataActivity.class);
+					} else if (type.equals("tram")) {
+						action = new Intent(FavoritesActivity.this,
+								TramDataActivity.class);
+					} else if (type.equals("store")) {
+						action = new Intent(FavoritesActivity.this,
+								StoreDataActivity.class);
+					} else if (type.equals("pharmacy")) {
+						action = new Intent(FavoritesActivity.this,
+								PharmacyDataActivity.class);
+					} else if (type.equals("gas")) {
+						action = new Intent(FavoritesActivity.this,
+								GasDataActivity.class);
+					} else if (type.equals("taxi")) {
+						action = new Intent(FavoritesActivity.this,
+								TaxiDataActivity.class);
+					}  else if (type.equals("parking")) {
+						action = new Intent(FavoritesActivity.this,
+								ParkingDataActivity.class);
+					}  else if (type.equals("wifi")) {
+						action = new Intent(FavoritesActivity.this,
+								WifiDataActivity.class);
 					}
 
 					action.putExtra("object", jo.toString());
@@ -133,6 +186,27 @@ public class FavoritesActivity extends Activity {
 						} else if (jo.getString("type").equals("bus")) {
 							title = getString(R.string.parada_bus);
 							icon.setImageResource(R.drawable.bus);
+						} else if (jo.getString("type").equals("tram")) {
+							title = getString(R.string.parada_tram);
+							icon.setImageResource(R.drawable.tranvia);
+						} else if (jo.getString("type").equals("store")) {
+							title = getString(R.string.establecimiento);
+							icon.setImageResource(R.drawable.recarga);
+						} else if (jo.getString("type").equals("pharmacy")) {
+							title = getString(R.string.farmacia);
+							icon.setImageResource(R.drawable.farmacia);
+						} else if (jo.getString("type").equals("gas")) {
+							title = getString(R.string.gasolinera);
+							icon.setImageResource(R.drawable.gas);
+						} else if (jo.getString("type").equals("taxi")) {
+							title = getString(R.string.taxi);
+							icon.setImageResource(R.drawable.taxi);
+						} else if (jo.getString("type").equals("parking")) {
+							title = getString(R.string.parking);
+							icon.setImageResource(R.drawable.parking);
+						} else if (jo.getString("type").equals("wifi")) {
+							title = getString(R.string.wifi);
+							icon.setImageResource(R.drawable.wifi);
 						}
 						tt.setText(title);
 					}

@@ -1,4 +1,4 @@
-package com.dndzgz.android.bikes;
+package com.dndzgz.android.wifi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,15 +40,15 @@ import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
-public class BikesActivity extends Activity {
+public class WifiActivity extends Activity {
 
-	private ListView listViewBikes;
+	private ListView listViewWifi;
 	private EditText txtSearch;
 
 	private ProgressDialog progressDialog = null;
-	private ArrayList<JSONObject> bikesArrayList = null;
-	private StoreAdapter bikesListAdapter;
-	private Runnable runnableBikes;
+	private ArrayList<JSONObject> wifiArrayList = null;
+	private WifiAdapter wifiListAdapter;
+	private Runnable runnableWifi;
 	private DndZgzApplication dndzgzApp;
 	private JSONArray listJSON;
 
@@ -64,72 +64,72 @@ public class BikesActivity extends Activity {
 		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		actionBar.setHomeAction(new IntentAction(this, homeIntent,
 				R.drawable.ic_title_home_default));
-		actionBar.setTitle(R.string.listado_estaciones);
-		Intent bikesMapIntent = new Intent(BikesActivity.this,
-				BikesMapActivity.class);
-		bikesMapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		final Action bikesMapAction = new IntentAction(this, bikesMapIntent,
+		actionBar.setTitle(R.string.listado_wifis);
+
+		Intent wifiMapIntent = new Intent(WifiActivity.this,
+				WifiMapActivity.class);
+		wifiMapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		final Action wifiMapAction = new IntentAction(this, wifiMapIntent,
 				R.drawable.ic_action_bar_locate);
-		actionBar.addAction(bikesMapAction);
+		actionBar.addAction(wifiMapAction);
 		// ////////////////
 		txtSearch = (EditText) findViewById(R.id.txtSearch);
 		txtSearch.addTextChangedListener(filterTextWatcher);
-		listViewBikes = (ListView) findViewById(R.id.ListView);
-		bikesArrayList = new ArrayList<JSONObject>();
-		this.bikesListAdapter = new StoreAdapter(this, R.layout.bikes_item,
-				bikesArrayList);
-		listViewBikes.setAdapter(this.bikesListAdapter);
-		listViewBikes.setOnItemClickListener(new OnItemClickListener() {
+		listViewWifi = (ListView) findViewById(R.id.ListView);
+		wifiArrayList = new ArrayList<JSONObject>();
+		this.wifiListAdapter = new WifiAdapter(this,
+				R.layout.wifi_item, wifiArrayList);
+		listViewWifi.setAdapter(this.wifiListAdapter);
+		listViewWifi.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-				JSONObject jo = bikesListAdapter.getItem(pos);
-				Intent mainIntent = new Intent(BikesActivity.this,
-						BikesDataActivity.class);
+				JSONObject jo = wifiListAdapter.getItem(pos);
+				Intent mainIntent = new Intent(WifiActivity.this,
+						WifiDataActivity.class);
 				mainIntent.putExtra("object", jo.toString());
 				mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				BikesActivity.this.startActivity(mainIntent);
+				WifiActivity.this.startActivity(mainIntent);
 			}
 		});
 		Log.i(TAG, "General Application");
-		// Obtengo el listado de Tiendas de la Aplicacion
-		dndzgzApp = ((DndZgzApplication) this.getApplication());
-		listJSON = dndzgzApp.getBikesList();
-		for (int i = 0; i < listJSON.length(); i++) {
+		// Obtengo el listado de paradas de la Aplicacion
+		dndzgzApp =  ((DndZgzApplication)this.getApplication());
+		listJSON = dndzgzApp.getWifiList();
+		for(int i=0; i<listJSON.length(); i++){
 			try {
-				bikesArrayList.add((JSONObject) listJSON.get(i));
+				wifiArrayList.add((JSONObject) listJSON.get(i));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		Log.i(TAG, "bikesArrayList: " + bikesArrayList.size());
-		// Si no tenemos el listado
-		if (!(bikesArrayList.size() > 0)) {
-			runnableBikes = new Runnable() {
+		Log.i(TAG, "wifiArrayList: " + wifiArrayList.size());
+		Log.i(TAG, "listJSON.length()" + listJSON.length());
+		//Si no tenemos el listado
+		if (!(wifiArrayList.size() > 0)) {
+			runnableWifi = new Runnable() {
 				@Override
 				public void run() {
-					getBikes();
+					getWifi();
 				}
 			};
-			Thread thread = new Thread(null, runnableBikes,
-					"ObtenerListadoBicis");
+			Thread thread = new Thread(null, runnableWifi,
+					"ObtenerListadoWifi");
 			thread.start();
-			progressDialog = ProgressDialog.show(BikesActivity.this,
-					getText(R.string.espere),
-					getText(R.string.obteniendo_datos), true);
+			progressDialog = ProgressDialog.show(WifiActivity.this,
+					getText(R.string.espere), getText(R.string.obteniendo_datos), true);
 		} else {
-			progressDialog = ProgressDialog.show(BikesActivity.this,
-					getText(R.string.espere),
-					getText(R.string.actualizando_datos), true);
-			updateBikesAdapter();
+			progressDialog = ProgressDialog.show(WifiActivity.this,
+					getText(R.string.espere), getText(R.string.actualizando_datos), true);
+			updateWifiAdapter();
 		}
 
 	}
 
-	private class StoreAdapter extends ArrayAdapter<JSONObject> {
+	private class WifiAdapter extends ArrayAdapter<JSONObject> {
 		private ArrayList<JSONObject> items;
 
-		public StoreAdapter(Context context, int textViewResourceId,
+		public WifiAdapter(Context context, int textViewResourceId,
 				ArrayList<JSONObject> items) {
 			super(context, textViewResourceId, items);
 			this.items = items;
@@ -140,7 +140,7 @@ public class BikesActivity extends Activity {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.bikes_item, null);
+				v = vi.inflate(R.layout.wifi_item, null);
 			}
 			JSONObject jo = items.get(position);
 			if (jo != null) {
@@ -162,31 +162,33 @@ public class BikesActivity extends Activity {
 		}
 	}
 
-	private void getBikes() {
+	private void getWifi() {
 		try {
-			Log.i(TAG, "getBikes()");
-			String jsonBikes = retriveList();
-			JSONArray bikesJson = new JSONArray(jsonBikes);
-			int n = bikesJson.length();
-			bikesArrayList = new ArrayList<JSONObject>();
-			JSONArray bikesArrayJson = new JSONArray();
+			Log.i(TAG, "getWifi()");
+			String jsonTram = retriveList();
+			JSONArray wifiJson = new JSONArray(jsonTram);
+			int n = wifiJson.length();
+			wifiArrayList = new ArrayList<JSONObject>();
+			JSONArray wifiArrayJson = new JSONArray();
 			Log.i(TAG, "Total Objetos: " + n);
 			for (int i = 0; i < n; i++) {
 				try {
-					JSONObject bike = bikesJson.getJSONObject(i);
-					bikesArrayJson.put(bike);
-					bikesArrayList.add(bike);
+					JSONObject tram = wifiJson.getJSONObject(i);
+					wifiArrayJson.put(tram);
+					wifiArrayList.add(tram);					
 				} catch (JSONException e) {
 					Log.e(TAG, e.getMessage());
 				}
 			}
-
-			dndzgzApp.setBikesList(bikesArrayJson);
-			listJSON = bikesArrayJson;
-			Log.i(TAG, "Total Bicis: " + bikesArrayList.size());
+			
+			dndzgzApp.setWifiList(wifiArrayJson);
+			listJSON = wifiArrayJson;
+			Log.i(TAG, "Total wifi: " + wifiArrayList.size());
+			Log.i(TAG, "wifiArrayList " + this.wifiArrayList.size());
+			Log.i(TAG, "listJSON.length()" + listJSON.length());
 		} catch (Exception e) {
-			Log.i(TAG, "getBikes() " + e.getMessage());
-			Log.i(TAG, "getBikes() " + e.toString());
+			Log.i(TAG, "getWifi() " + e.getMessage());
+			Log.i(TAG, "getWifi() " + e.toString());
 		}
 
 		runOnUiThread(returnRes);
@@ -195,8 +197,8 @@ public class BikesActivity extends Activity {
 	private Runnable returnRes = new Runnable() {
 		@Override
 		public void run() {
-			updateBikesAdapter();
-		}
+			updateWifiAdapter();
+		}		
 	};
 
 	public String retriveList() {
@@ -207,7 +209,7 @@ public class BikesActivity extends Activity {
 		Writer writer = null;
 		String result = null;
 		try {
-			url = new URL("http://www.dndzgz.com/fetch?service=bizi");
+			url = new URL("http://www.dndzgz.com/fetch?service=wifi");
 			urlConnection = (HttpURLConnection) url.openConnection();
 			InputStream in = urlConnection.getInputStream();
 			if (in != null) {
@@ -251,10 +253,12 @@ public class BikesActivity extends Activity {
 	};
 
 	protected void filtrarAdapter(CharSequence s) {
-		if (s.toString().length() > 0) {
-			bikesListAdapter.clear();
+		if(s.toString().length() > 0){
+			Log.i(TAG, "listJSON.length()" + listJSON.length());
+			this.wifiListAdapter.clear();
 			String search = s.toString();
 			search = search.toLowerCase();
+			Log.i(TAG, "listJSON.length()" + listJSON.length());
 			for (int i = 0; i < this.listJSON.length(); i++) {
 				JSONObject jo = new JSONObject();
 				try {
@@ -267,38 +271,39 @@ public class BikesActivity extends Activity {
 				try {
 					titulo = jo.getString("title").toLowerCase();
 					subtitulo = jo.getString("subtitle").toLowerCase();
+					Log.i(TAG, "titulo" + titulo);
+					Log.i(TAG, "subtitulo" + subtitulo);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 				if (titulo.contains(search) || subtitulo.contains(search)) {
-					bikesListAdapter.add(jo);
+					this.wifiListAdapter.add(jo);
 				}
 			}
-			bikesListAdapter.notifyDataSetChanged();
-		} else {
-			for (int i = 0; i < listJSON.length(); i++) {
+			this.wifiListAdapter.notifyDataSetChanged();
+		}else{
+			for(int i=0; i<listJSON.length(); i++){
 				try {
-					bikesArrayList.add((JSONObject) listJSON.get(i));
+					wifiArrayList.add((JSONObject) listJSON.get(i));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
-			this.bikesListAdapter = new StoreAdapter(this, R.layout.autobus_item,
-					this.bikesArrayList);
-			this.listViewBikes.setAdapter(this.bikesListAdapter);
+			this.wifiListAdapter = new WifiAdapter(this,
+					R.layout.autobus_item, this.wifiArrayList);
+			this.listViewWifi.setAdapter(this.wifiListAdapter);
 		}
 	}
 
-	private void updateBikesAdapter() {
-		if (bikesArrayList != null && bikesArrayList.size() > 0) {
-			this.bikesListAdapter = new StoreAdapter(this,
-					R.layout.autobus_item, this.bikesArrayList);
-			this.listViewBikes.setAdapter(this.bikesListAdapter);
+	private void updateWifiAdapter() {
+		if (wifiArrayList != null && wifiArrayList.size() > 0) {
+			this.wifiListAdapter = new WifiAdapter(this,
+					R.layout.autobus_item, this.wifiArrayList);
+			this.listViewWifi.setAdapter(this.wifiListAdapter);
 		}
 		progressDialog.dismiss();
-		bikesListAdapter.notifyDataSetChanged();
-		listViewBikes.requestFocus();
+		wifiListAdapter.notifyDataSetChanged();
+		listViewWifi.requestFocus();
 	}
 }

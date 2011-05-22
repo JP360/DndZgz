@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DndZgz</string>
+    <string name="id_poste">Bus Stop: </string>
+    <string name="dndzgz">Dónde en Zaragoza</string>
+    <string name="listado_paradas">Listado de Paradas</string>
+    <string name="listado_estaciones">Listado de Estaciones</string>
+    <string name="mapa_paradas">Mapa de Paradas</string>
+    <string name="mapa_estaciones">Mapa de Estaciones</string>
+    <string name="buscar">Buscar: </string>
+    <string name="espere">Por favor, Espere...</string>
+    <string name="obteniendo_datos">Obteniendo Datos...</string>
+    <string name="actualizando_datos">Actualizando Datos...</string>
+    <string name="pintando_puntos">Pintando Puntos...</string>
+    <string name="favoritos">Favoritos</string>   
+    <string name="estacion_bici">Estacion Bici</string>
+    <string name="parada_tram">Parada Tranvia</string>    
+    <string name="parada_bus">Parada Bus</string>    
+    <string name="ver_info">Ver Información</string>
+    <string name="borrar_fav">Borrar Favorito</string>
+    <string name="fav">Favorito</string> 
+    <string name="establecimiento">Establecimiento</string>
+    <string name="listado_establecimientos">Listado de Establecimientos</string> 
+    <string name="farmacia">Farmacia</string>
+    <string name="listado_farmacias">Listado de Farmacias</string>
+    <string name="gasolinera">Gasolinera</string>
+    <string name="listado_gasolineras">Listado de Gasolineras</string>
+    <string name="taxi">Taxi</string>
+    <string name="listado_taxis">Listado de Taxis</string>
+    <string name="parking">Parking</string>
+    <string name="listado_parking">Listado de Parking</string>
+    <string name="wifi">Wifi</string>
+    <string name="listado_wifis">Listado de Wifis</string>     
+</resources>

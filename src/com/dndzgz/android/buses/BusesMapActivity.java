@@ -32,7 +32,7 @@ public class BusesMapActivity extends MapActivity {
 
 	private ProgressDialog progressDialog = null;
 	private MapView mapView;
-	private ArrayList<JSONObject> busesArrayList = null;
+	private ArrayList<JSONObject> busesArrayList = new ArrayList<JSONObject>();
 	private DndZgzApplication dndzgzApp;
 	private ObjectsItemizedOverlay itemizedoverlay;
 	private Runnable runnableAutobus;
@@ -62,7 +62,7 @@ public class BusesMapActivity extends MapActivity {
 				R.drawable.ic_icon_user_location);
 		userOverlay = new userItemizedOverlay(userLocationMarker);
 		dndzgzApp =  ((DndZgzApplication)this.getApplication());
-		JSONArray listJSON = dndzgzApp.getBikesList();
+		JSONArray listJSON = dndzgzApp.getBusesList();
 		for(int i=0; i<listJSON.length(); i++){
 			try {
 				busesArrayList.add((JSONObject) listJSON.get(i));

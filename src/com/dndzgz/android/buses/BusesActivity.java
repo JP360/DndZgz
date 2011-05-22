@@ -50,6 +50,7 @@ public class BusesActivity extends Activity {
 	private AutobusesAdapter busesListAdapter;
 	private Runnable runnableBuses;
 	private DndZgzApplication dndzgzApp;
+	private JSONArray listJSON;
 
 	private static final String TAG = "DndZgzAndroid";
 
@@ -63,7 +64,7 @@ public class BusesActivity extends Activity {
 		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		actionBar.setHomeAction(new IntentAction(this, homeIntent,
 				R.drawable.ic_title_home_default));
-		actionBar.setTitle(R.string.listado_autobuses);
+		actionBar.setTitle(R.string.listado_paradas);
 
 		Intent busesMapIntent = new Intent(BusesActivity.this,
 				BusesMapActivity.class);
@@ -93,9 +94,9 @@ public class BusesActivity extends Activity {
 		});
 		Log.i(TAG, "General Application");
 		// Obtengo el listado de Autobuses de la Aplicacion
-		dndzgzApp =  ((DndZgzApplication)this.getApplication());
-		JSONArray listJSON = dndzgzApp.getBikesList();
-		for(int i=0; i<listJSON.length(); i++){
+		dndzgzApp = ((DndZgzApplication) this.getApplication());
+		listJSON = dndzgzApp.getBusesList();
+		for (int i = 0; i < listJSON.length(); i++) {
 			try {
 				busesArrayList.add((JSONObject) listJSON.get(i));
 			} catch (JSONException e) {
@@ -103,7 +104,7 @@ public class BusesActivity extends Activity {
 			}
 		}
 		Log.i(TAG, "busesArrayList: " + busesArrayList.size());
-		//Si no tenemos el listado
+		// Si no tenemos el listado
 		if (!(busesArrayList.size() > 0)) {
 			runnableBuses = new Runnable() {
 				@Override
@@ -115,10 +116,13 @@ public class BusesActivity extends Activity {
 					"ObtenerListadoAutobuses");
 			thread.start();
 			progressDialog = ProgressDialog.show(BusesActivity.this,
-					getText(R.string.espere), getText(R.string.obteniendo_datos), true);
+					getText(R.string.espere),
+					getText(R.string.obteniendo_datos), true);
 		} else {
+			Log.i(TAG, "else");
 			progressDialog = ProgressDialog.show(BusesActivity.this,
-					getText(R.string.espere), getText(R.string.actualizando_datos), true);
+					getText(R.string.espere),
+					getText(R.string.actualizando_datos), true);
 			updateBusesAdapter();
 		}
 
@@ -179,6 +183,7 @@ public class BusesActivity extends Activity {
 				}
 			}
 			dndzgzApp.setBusesList(busesArrayJson);
+			listJSON = busesArrayJson;
 			Log.i(TAG, "Total Buses: " + busesArrayList.size());
 		} catch (Exception e) {
 			Log.i(TAG, "getAutobuses() " + e.getMessage());
@@ -192,7 +197,7 @@ public class BusesActivity extends Activity {
 		@Override
 		public void run() {
 			updateBusesAdapter();
-		}		
+		}
 	};
 
 	public String retriveList() {
@@ -247,42 +252,61 @@ public class BusesActivity extends Activity {
 	};
 
 	protected void filtrarAdapter(CharSequence s) {
-		busesListAdapter.clear();
-		String search = s.toString();
-		search = search.toLowerCase();
-		for (int i = 0; i < busesArrayList.size(); i++) {
-			JSONObject jo = busesArrayList.get(i);
-			String titulo = "";
-			String subtitulo = "";
-			try {
-				titulo = jo.getString("title").toLowerCase();
-				subtitulo = jo.getString("subtitle").toLowerCase();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (s.toString().length() > 0) {
+			busesListAdapter.clear();
+			String search = s.toString();
+			search = search.toLowerCase();
+			for (int i = 0; i < this.listJSON.length(); i++) {
+				JSONObject jo = new JSONObject();
+				try {
+					jo = (JSONObject) this.listJSON.get(i);
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
+				String titulo = "";
+				String subtitulo = "";
+				try {
+					titulo = jo.getString("title").toLowerCase();
+					subtitulo = jo.getString("subtitle").toLowerCase();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-			if (titulo.contains(search) || subtitulo.contains(search)) {
-				busesListAdapter.add(jo);
+				if (titulo.contains(search) || subtitulo.contains(search)) {
+					busesListAdapter.add(jo);
+				}
 			}
+			busesListAdapter.notifyDataSetChanged();
+		} else {
+			for (int i = 0; i < listJSON.length(); i++) {
+				try {
+					busesArrayList.add((JSONObject) listJSON.get(i));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			this.busesListAdapter = new AutobusesAdapter(this,
+					R.layout.autobus_item, this.busesArrayList);
+			this.listViewBuses.setAdapter(this.busesListAdapter);
 		}
-		busesListAdapter.notifyDataSetChanged();
 	}
 
 	private void updateBusesAdapter() {
 		if (busesArrayList != null && busesArrayList.size() > 0) {
-			busesListAdapter.notifyDataSetChanged();
-			for (int i = 0; i < busesArrayList.size(); i++)
-				busesListAdapter.add(busesArrayList.get(i));
+			this.busesListAdapter = new AutobusesAdapter(this,
+					R.layout.autobus_item, this.busesArrayList);
+			this.listViewBuses.setAdapter(this.busesListAdapter);
 		}
 		progressDialog.dismiss();
 		busesListAdapter.notifyDataSetChanged();
 		listViewBuses.requestFocus();
 		filterBusesList();
 	}
-	
+
 	private void filterBusesList() {
 		if (getIntent().hasExtra("filtro")) {
+			Log.i(TAG, "filtro");
 			String filtro = getIntent().getStringExtra("filtro");
 			filtro = "Poste " + filtro;
 			filtrarAdapter(filtro);

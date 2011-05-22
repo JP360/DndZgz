@@ -1,4 +1,4 @@
-package com.dndzgz.android.bikes;
+package com.dndzgz.android.tram;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +28,14 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public class BikesMapActivity extends MapActivity {
+public class TramMapActivity extends MapActivity {
 
 	private ProgressDialog progressDialog = null;
 	private MapView mapView;
-	private ArrayList<JSONObject> bikesArrayList = new ArrayList<JSONObject>();
+	private ArrayList<JSONObject> tramArrayList = new ArrayList<JSONObject>();
 	private DndZgzApplication dndzgzApp;
 	private ObjectsItemizedOverlay itemizedoverlay;
-	private Runnable runnableBikes;
+	private Runnable runnableTram;
 	private List<Overlay> mapOverlays;
 	private Drawable pushPinMarker;
 	private Drawable userLocationMarker;
@@ -57,31 +57,31 @@ public class BikesMapActivity extends MapActivity {
 		mapOverlays = mapView.getOverlays();
 		pushPinMarker = this.getResources().getDrawable(R.drawable.ic_icon_map_marker);
 		itemizedoverlay = new ObjectsItemizedOverlay(pushPinMarker, mapView);
-		itemizedoverlay.setDestino(BikesDataActivity.class);
+		itemizedoverlay.setDestino(TramDataActivity.class);
 		userLocationMarker = this.getResources().getDrawable(
 				R.drawable.ic_icon_user_location);
 		userOverlay = new userItemizedOverlay(userLocationMarker);
-		dndzgzApp = ((DndZgzApplication) this.getApplication());
-		JSONArray listJSON = dndzgzApp.getBikesList();
+		dndzgzApp = ((DndZgzApplication) this.getApplication());		
+		JSONArray listJSON = dndzgzApp.getTramList();
 		for(int i=0; i<listJSON.length(); i++){
 			try {
-				bikesArrayList.add((JSONObject) listJSON.get(i));
+				tramArrayList.add((JSONObject) listJSON.get(i));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		Log.i(TAG, "bikesArrayList: " + bikesArrayList.size());
+		Log.i(TAG, "tramArrayList: " + tramArrayList.size());
 
-		runnableBikes = new Runnable() {
+		runnableTram = new Runnable() {
 			@Override
 			public void run() {
 				paintObjects();
 			}
 		};
 
-		Thread thread = new Thread(null, runnableBikes, "PintarPuntosMapa");
+		Thread thread = new Thread(null, runnableTram, "PintarPuntosMapa");
 		thread.start();
-		progressDialog = ProgressDialog.show(BikesMapActivity.this,
+		progressDialog = ProgressDialog.show(TramMapActivity.this,
 				getText(R.string.espere), getText(R.string.pintando_puntos), true);
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
@@ -111,8 +111,8 @@ public class BikesMapActivity extends MapActivity {
 
 	private void paintObjects() {
 		Log.i(TAG, "paintObjects()");
-		for (int i = 1; i < bikesArrayList.size(); i++) {
-			JSONObject jo = bikesArrayList.get(i - 1);
+		for (int i = 1; i < tramArrayList.size(); i++) {
+			JSONObject jo = tramArrayList.get(i - 1);
 			try {
 				String title = jo.getString("title");
 				String subtitle = jo.getString("subtitle");
@@ -128,7 +128,7 @@ public class BikesMapActivity extends MapActivity {
 					mapOverlays.add(itemizedoverlay);
 					itemizedoverlay = new ObjectsItemizedOverlay(pushPinMarker,
 							mapView);
-					itemizedoverlay.setDestino(BikesDataActivity.class);
+					itemizedoverlay.setDestino(TramDataActivity.class);
 					// Log.e(TAG, "Nueva Capa");
 				}
 				// Log.i(TAG, (i+1)+"");

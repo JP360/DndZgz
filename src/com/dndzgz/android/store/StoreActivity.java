@@ -1,4 +1,4 @@
-package com.dndzgz.android.bikes;
+package com.dndzgz.android.store;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,15 +40,15 @@ import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
-public class BikesActivity extends Activity {
+public class StoreActivity extends Activity {
 
-	private ListView listViewBikes;
+	private ListView listViewStore;
 	private EditText txtSearch;
 
 	private ProgressDialog progressDialog = null;
-	private ArrayList<JSONObject> bikesArrayList = null;
-	private StoreAdapter bikesListAdapter;
-	private Runnable runnableBikes;
+	private ArrayList<JSONObject> storeArrayList = null;
+	private StoreAdapter storeListAdapter;
+	private Runnable runnableStore;
 	private DndZgzApplication dndzgzApp;
 	private JSONArray listJSON;
 
@@ -64,65 +64,51 @@ public class BikesActivity extends Activity {
 		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		actionBar.setHomeAction(new IntentAction(this, homeIntent,
 				R.drawable.ic_title_home_default));
-		actionBar.setTitle(R.string.listado_estaciones);
-		Intent bikesMapIntent = new Intent(BikesActivity.this,
-				BikesMapActivity.class);
-		bikesMapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		final Action bikesMapAction = new IntentAction(this, bikesMapIntent,
+		actionBar.setTitle(R.string.listado_establecimientos);
+
+		Intent storeMapIntent = new Intent(StoreActivity.this,
+				StoreMapActivity.class);
+		storeMapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		final Action storeMapAction = new IntentAction(this, storeMapIntent,
 				R.drawable.ic_action_bar_locate);
-		actionBar.addAction(bikesMapAction);
+		actionBar.addAction(storeMapAction);
 		// ////////////////
 		txtSearch = (EditText) findViewById(R.id.txtSearch);
 		txtSearch.addTextChangedListener(filterTextWatcher);
-		listViewBikes = (ListView) findViewById(R.id.ListView);
-		bikesArrayList = new ArrayList<JSONObject>();
-		this.bikesListAdapter = new StoreAdapter(this, R.layout.bikes_item,
-				bikesArrayList);
-		listViewBikes.setAdapter(this.bikesListAdapter);
-		listViewBikes.setOnItemClickListener(new OnItemClickListener() {
+		listViewStore = (ListView) findViewById(R.id.ListView);
+		storeArrayList = new ArrayList<JSONObject>();
+		this.storeListAdapter = new StoreAdapter(this, R.layout.store_item,
+				storeArrayList);
+		listViewStore.setAdapter(this.storeListAdapter);
+		listViewStore.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-				JSONObject jo = bikesListAdapter.getItem(pos);
-				Intent mainIntent = new Intent(BikesActivity.this,
-						BikesDataActivity.class);
+				JSONObject jo = storeListAdapter.getItem(pos);
+				Intent mainIntent = new Intent(StoreActivity.this,
+						StoreDataActivity.class);
 				mainIntent.putExtra("object", jo.toString());
 				mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				BikesActivity.this.startActivity(mainIntent);
+				StoreActivity.this.startActivity(mainIntent);
 			}
 		});
 		Log.i(TAG, "General Application");
 		// Obtengo el listado de Tiendas de la Aplicacion
 		dndzgzApp = ((DndZgzApplication) this.getApplication());
-		listJSON = dndzgzApp.getBikesList();
+		listJSON = dndzgzApp.getStoreList();
 		for (int i = 0; i < listJSON.length(); i++) {
 			try {
-				bikesArrayList.add((JSONObject) listJSON.get(i));
+				storeArrayList.add((JSONObject) listJSON.get(i));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		Log.i(TAG, "bikesArrayList: " + bikesArrayList.size());
-		// Si no tenemos el listado
-		if (!(bikesArrayList.size() > 0)) {
-			runnableBikes = new Runnable() {
-				@Override
-				public void run() {
-					getBikes();
-				}
-			};
-			Thread thread = new Thread(null, runnableBikes,
-					"ObtenerListadoBicis");
-			thread.start();
-			progressDialog = ProgressDialog.show(BikesActivity.this,
-					getText(R.string.espere),
-					getText(R.string.obteniendo_datos), true);
-		} else {
-			progressDialog = ProgressDialog.show(BikesActivity.this,
-					getText(R.string.espere),
-					getText(R.string.actualizando_datos), true);
-			updateBikesAdapter();
-		}
+		Log.i(TAG, "storeArrayList: " + storeArrayList.size());
+
+		progressDialog = ProgressDialog.show(StoreActivity.this,
+				getText(R.string.espere), getText(R.string.actualizando_datos),
+				true);
+		updateStoreAdapter();
 
 	}
 
@@ -140,7 +126,7 @@ public class BikesActivity extends Activity {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.bikes_item, null);
+				v = vi.inflate(R.layout.store_item, null);
 			}
 			JSONObject jo = items.get(position);
 			if (jo != null) {
@@ -161,79 +147,7 @@ public class BikesActivity extends Activity {
 			return v;
 		}
 	}
-
-	private void getBikes() {
-		try {
-			Log.i(TAG, "getBikes()");
-			String jsonBikes = retriveList();
-			JSONArray bikesJson = new JSONArray(jsonBikes);
-			int n = bikesJson.length();
-			bikesArrayList = new ArrayList<JSONObject>();
-			JSONArray bikesArrayJson = new JSONArray();
-			Log.i(TAG, "Total Objetos: " + n);
-			for (int i = 0; i < n; i++) {
-				try {
-					JSONObject bike = bikesJson.getJSONObject(i);
-					bikesArrayJson.put(bike);
-					bikesArrayList.add(bike);
-				} catch (JSONException e) {
-					Log.e(TAG, e.getMessage());
-				}
-			}
-
-			dndzgzApp.setBikesList(bikesArrayJson);
-			listJSON = bikesArrayJson;
-			Log.i(TAG, "Total Bicis: " + bikesArrayList.size());
-		} catch (Exception e) {
-			Log.i(TAG, "getBikes() " + e.getMessage());
-			Log.i(TAG, "getBikes() " + e.toString());
-		}
-
-		runOnUiThread(returnRes);
-	}
-
-	private Runnable returnRes = new Runnable() {
-		@Override
-		public void run() {
-			updateBikesAdapter();
-		}
-	};
-
-	public String retriveList() {
-		// Obtenemos el listado
-		Log.i(TAG, "retriveList()");
-		URL url;
-		HttpURLConnection urlConnection = null;
-		Writer writer = null;
-		String result = null;
-		try {
-			url = new URL("http://www.dndzgz.com/fetch?service=bizi");
-			urlConnection = (HttpURLConnection) url.openConnection();
-			InputStream in = urlConnection.getInputStream();
-			if (in != null) {
-				writer = new StringWriter();
-				char[] buffer = new char[1024];
-				try {
-					Reader reader = new BufferedReader(new InputStreamReader(
-							in, "UTF-8"));
-					int n;
-					while ((n = reader.read(buffer)) != -1) {
-						writer.write(buffer, 0, n);
-					}
-				} finally {
-					in.close();
-				}
-			}
-			result = writer.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			urlConnection.disconnect();
-		}
-		Log.i(TAG, "listado obtenido (¡¡Gracias DndZgz!!)");
-		return result;
-	}
-
+	
 	private TextWatcher filterTextWatcher = new TextWatcher() {
 
 		public void afterTextChanged(Editable s) {
@@ -252,7 +166,7 @@ public class BikesActivity extends Activity {
 
 	protected void filtrarAdapter(CharSequence s) {
 		if (s.toString().length() > 0) {
-			bikesListAdapter.clear();
+			storeListAdapter.clear();
 			String search = s.toString();
 			search = search.toLowerCase();
 			for (int i = 0; i < this.listJSON.length(); i++) {
@@ -273,32 +187,32 @@ public class BikesActivity extends Activity {
 				}
 
 				if (titulo.contains(search) || subtitulo.contains(search)) {
-					bikesListAdapter.add(jo);
+					storeListAdapter.add(jo);
 				}
 			}
-			bikesListAdapter.notifyDataSetChanged();
+			storeListAdapter.notifyDataSetChanged();
 		} else {
 			for (int i = 0; i < listJSON.length(); i++) {
 				try {
-					bikesArrayList.add((JSONObject) listJSON.get(i));
+					storeArrayList.add((JSONObject) listJSON.get(i));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
-			this.bikesListAdapter = new StoreAdapter(this, R.layout.autobus_item,
-					this.bikesArrayList);
-			this.listViewBikes.setAdapter(this.bikesListAdapter);
+			this.storeListAdapter = new StoreAdapter(this,
+					R.layout.autobus_item, this.storeArrayList);
+			this.listViewStore.setAdapter(this.storeListAdapter);
 		}
 	}
 
-	private void updateBikesAdapter() {
-		if (bikesArrayList != null && bikesArrayList.size() > 0) {
-			this.bikesListAdapter = new StoreAdapter(this,
-					R.layout.autobus_item, this.bikesArrayList);
-			this.listViewBikes.setAdapter(this.bikesListAdapter);
+	private void updateStoreAdapter() {
+		if (storeArrayList != null && storeArrayList.size() > 0) {
+			this.storeListAdapter = new StoreAdapter(this,
+					R.layout.autobus_item, this.storeArrayList);
+			this.listViewStore.setAdapter(this.storeListAdapter);
 		}
 		progressDialog.dismiss();
-		bikesListAdapter.notifyDataSetChanged();
-		listViewBikes.requestFocus();
+		storeListAdapter.notifyDataSetChanged();
+		listViewStore.requestFocus();
 	}
 }
