@@ -1,86 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.dndzgz.android" android:versionCode="1"
-	android:versionName="1.0">
-	<uses-sdk android:minSdkVersion="7" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	
-	<application android:icon="@drawable/ic_logo_dndzgz"
-		android:label="@string/app_name" android:name=".DndZgzApplication">
-		<uses-library android:name="com.google.android.maps" />
-		<activity android:name=".MenuActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+      package="com.android.dndzgz"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="4" />
+	 <uses-permission android:name="android.permission.INTERNET" />
+	 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	 
+    <application android:icon="@drawable/logoicono" android:label="@string/app_name">
+    
+        <activity android:name=".SplashActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MenuActivity" android:label="@string/app_name">
+		</activity>
+		<activity android:name=".AutobusesActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity android:name=".WifisActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity android:name=".BiziActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity android:name=".DetailActivity" android:label="@string/app_name">
 		</activity>
 		
-		<activity android:name=".buses.BusesActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".buses.BusDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".buses.BusesMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".bikes.BikesActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".bikes.BikesDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".bikes.BikesMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".tram.TramActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".tram.TramDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".tram.TramMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".store.StoreActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".store.StoreDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".store.StoreMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".pharmacy.PharmacyActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".pharmacy.PharmacyDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".pharmacy.PharmacyMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".gas.GasActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".gas.GasDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".gas.GasMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".taxi.TaxiActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".taxi.TaxiDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".taxi.TaxiMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".parking.ParkingActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".parking.ParkingDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".parking.ParkingMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".wifi.WifiActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".wifi.WifiDataActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-		<activity android:name=".wifi.WifiMapActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />
-			
-		<activity android:name=".favorites.FavoritesActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" />		
-	</application>
+		<uses-library android:name="com.google.android.maps" />
+    </application>
 </manifest>
